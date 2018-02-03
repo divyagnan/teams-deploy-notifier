@@ -3,6 +3,7 @@ const arg = require("arg");
 const axios = require("axios");
 const chalk = require("chalk");
 const urlRegex = require("url-regex");
+const format = require("date-fns/format");
 const fs = require("fs");
 const path = require("path");
 
@@ -83,10 +84,38 @@ function execAndPost(service, deployPath, projectName, teamsUrl) {
     const urlMatches = stdout.match(urlRegex());
     const deployedUrl = urlMatches[0];
 
+    // get date string of the time at which it was uploaded
+    const dateString = format(new Date(), "MMMM Do YYYY h:mma");
+
     // post the deployment message
     axios
       .post(teamsUrl, {
-        text: `The **${projectName}** site was deployed! See it live here: [${deployedUrl}](${deployedUrl})`
+        "@type": "MessageCard",
+        "@context": "http://schema.org/extensions",
+        summary: `A new version of the ${projectName} site was deployed to ${deployedUrl}`,
+        themeColor: "0075FF",
+        sections: [
+          {
+            startGroup: true,
+            title: `**New ${projectName} site deployed**`,
+            facts: [
+              { name: "Date/time uploaded:", value: dateString },
+              {
+                name: "Link:",
+                value: `[${deployedUrl}](${deployedUrl})`
+              }
+            ]
+          },
+          {
+            potentialAction: [
+              {
+                "@type": "OpenUri",
+                name: "View Website",
+                targets: [{ os: "default", uri: deployedUrl }]
+              }
+            ]
+          }
+        ]
       })
       .then(function(response) {
         console.log("Deployment message posted to Teams");
