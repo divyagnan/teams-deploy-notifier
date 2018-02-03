@@ -16,7 +16,11 @@
     "notify",
     "webhook"
   ],
-  "author": "Divyagnan",
+  "author": "Divyagnan <divyagnan@users.noreply.github.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/divyagnan/teams-deploy-notifier.git"
+  },
   "license": "MIT",
   "dependencies": {
     "arg": "^1.0.0",
