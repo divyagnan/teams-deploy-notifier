@@ -26,7 +26,7 @@ const deployPath = args["--path"] || ".";
 
 /**
  * Get the config file and extract the useful variables from it (projectName & teamsUrl)
- * @returns {{ projectName: string, teamsUrl: string }}
+ * @returns {{ projectName: string, teamsUrl: string, options: object? }}
  */
 function getConfig() {
   if (fs.existsSync(path.join(__dirname, ".teams-notifier-config.json"))) {
@@ -72,6 +72,7 @@ function getConfig() {
  * @param {string} deployPath - the path to the files you want to deploy
  * @param {string} projectName - the name of the project you are deploying
  * @param {string} teamsUrl - the teams webhook url where the notification needs to be posted
+ * @param {{ themeColor: string? }} options - object with options provided by the user
  */
 function execAndPost(service, deployPath, projectName, teamsUrl, options) {
   // make sure they have the service installed
