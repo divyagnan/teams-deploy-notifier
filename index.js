@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const shell = require("shelljs");
 const arg = require("arg");
 const axios = require("axios");
