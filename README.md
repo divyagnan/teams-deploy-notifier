@@ -1,5 +1,4 @@
-# teams-deploy-notifier
-
+# teams-deploy-notifier [![npm version](https://badge.fury.io/js/teams-deploy-notifier.svg)](https://badge.fury.io/js/teams-deploy-notifier)
 > CLI tool to notify your colleagues on MS Teams that you've deployed something
 
 ## Installation
