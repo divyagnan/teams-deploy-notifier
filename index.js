@@ -2,6 +2,7 @@ const shell = require("shelljs");
 const arg = require("arg");
 const axios = require("axios");
 const chalk = require("chalk");
+const urlRegex = require("url-regex");
 const fs = require("fs");
 const path = require("path");
 
@@ -74,12 +75,18 @@ function execAndPost(service, deployPath, projectName, teamsUrl) {
   if (shell.which(service)) {
     // execute the command with the service with the provided path
     // also save the value that was outputted to the console by the service
-    const { stdout } = shell.exec(`${service} ${deployPath}`);
+    const { stdout } = shell.exec(
+      `${service} ${service === "netlify" ? "deploy" : ""} ${deployPath}`
+    );
+
+    // get the url from the stdout
+    const urlMatches = stdout.match(urlRegex());
+    const deployedUrl = urlMatches[0];
 
     // post the deployment message
     axios
       .post(teamsUrl, {
-        text: `The **${projectName}** site was deployed! See it live here: [${stdout}](${stdout})`
+        text: `The **${projectName}** site was deployed! See it live here: [${deployedUrl}](${deployedUrl})`
       })
       .then(function(response) {
         console.log("Deployment message posted to Teams");
