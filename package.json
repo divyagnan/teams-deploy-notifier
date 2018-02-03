@@ -1,0 +1,19 @@
+{
+  "name": "teamsbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "Divyagnan",
+  "license": "MIT",
+  "dependencies": {
+    "arg": "^1.0.0",
+    "axios": "^0.17.1",
+    "chalk": "^2.3.0",
+    "shelljs": "^0.8.1"
+  }
+}
