@@ -114,6 +114,17 @@ The following services have been tested with `teams-deploy-notifier` and are con
 * [Netlify](https://www.netlify.com)
   * Need to have a `.netlify` config file before attempting deployment
 
+## FAQ
+
+* How do I obtain a MS Teams incoming webhook url
+  * Select the `...` button on channel where you want the notifications
+  * Select the `Connectors` option
+  * Search for `Incoming Webhook`
+  * Select the configure button for the Incoming Webhook option
+  * Provide a name and optionally an image and then select create
+  * Copy the provided url and paste it into your config (`teams-notifier-config.json`) file
+  * See this https://docs.microsoft.com/en-us/microsoftteams/platform/concepts/connectors#setting-up-a-custom-incoming-webhook for more information
+
 ## License
 
 MIT © Divyagnan Kandala
