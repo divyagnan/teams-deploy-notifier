@@ -1,4 +1,7 @@
 {
   "projectName": "the name of your project",
-  "teamsUrl": "url teams webhook url"
+  "teamsUrl": "url teams webhook url",
+  "options": {
+    "themeColor": "hex code for your color without the #"
+  }
 }

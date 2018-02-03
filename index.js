@@ -4,6 +4,7 @@ const axios = require("axios");
 const chalk = require("chalk");
 const urlRegex = require("url-regex");
 const format = require("date-fns/format");
+const hnt = require("hnt");
 const fs = require("fs");
 const path = require("path");
 
@@ -35,7 +36,7 @@ function getConfig() {
 
     // try to read the config file
     try {
-      const { projectName, teamsUrl } = JSON.parse(configFileRaw);
+      const { projectName, teamsUrl, options } = JSON.parse(configFileRaw);
 
       // make sure the fields that we need are present
       if (!projectName) {
@@ -46,7 +47,7 @@ function getConfig() {
         throw chalk.red("You don't have a teamsUrl field! It is required!");
       }
 
-      return { projectName, teamsUrl };
+      return { projectName, teamsUrl, options };
     } catch (e) {
       console.log(chalk`
         {red Your config file wasn't able to to be parsed correctly.}
@@ -71,7 +72,7 @@ function getConfig() {
  * @param {string} projectName - the name of the project you are deploying
  * @param {string} teamsUrl - the teams webhook url where the notification needs to be posted
  */
-function execAndPost(service, deployPath, projectName, teamsUrl) {
+function execAndPost(service, deployPath, projectName, teamsUrl, options) {
   // make sure they have the service installed
   if (shell.which(service)) {
     // execute the command with the service with the provided path
@@ -85,7 +86,7 @@ function execAndPost(service, deployPath, projectName, teamsUrl) {
     const deployedUrl = urlMatches[0];
 
     // get date string of the time at which it was uploaded
-    const dateString = format(new Date(), "MMMM Do YYYY h:mma");
+    const dateString = format(new Date(), "MMM Do h:mma");
 
     // post the deployment message
     axios
@@ -93,7 +94,7 @@ function execAndPost(service, deployPath, projectName, teamsUrl) {
         "@type": "MessageCard",
         "@context": "http://schema.org/extensions",
         summary: `A new version of the ${projectName} site was deployed to ${deployedUrl}`,
-        themeColor: "0075FF",
+        themeColor: hnt(options, "themeColor", "0075FF"),
         sections: [
           {
             startGroup: true,
@@ -118,7 +119,7 @@ function execAndPost(service, deployPath, projectName, teamsUrl) {
         ]
       })
       .then(function(response) {
-        console.log("Deployment message posted to Teams");
+        console.log(chalk`\n{green Deployment message posted to Teams}`);
       })
       .catch(function(error) {
         console.log(chalk`
@@ -137,5 +138,5 @@ function execAndPost(service, deployPath, projectName, teamsUrl) {
 }
 
 // kick it off!
-const { projectName, teamsUrl } = getConfig();
-execAndPost(service, deployPath, projectName, teamsUrl);
+const { projectName, teamsUrl, options } = getConfig();
+execAndPost(service, deployPath, projectName, teamsUrl, options);
