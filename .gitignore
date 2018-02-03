@@ -6,4 +6,5 @@ build/
 dist/
 
 .config
+.teams-notifier-config.json
 .netlify

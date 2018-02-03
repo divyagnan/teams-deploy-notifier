@@ -1,13 +1,14 @@
 {
-  "name": "teamsbot",
+  "name": "teams-deploy-notifier",
   "version": "1.0.0",
-  "description": "",
+  "description":
+    "CLI tool to notify your colleagues on MS Teams that you've deployed something",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "keywords": [],
+  "keywords": ["teams", "deploy", "notify", "webhook"],
   "author": "Divyagnan",
   "license": "MIT",
   "dependencies": {

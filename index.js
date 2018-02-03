@@ -28,9 +28,9 @@ const deployPath = args["--path"] || ".";
  * @returns {{ projectName: string, teamsUrl: string }}
  */
 function getConfig() {
-  if (fs.existsSync(path.join(__dirname, ".config"))) {
+  if (fs.existsSync(path.join(__dirname, ".teams-notifier-config.json"))) {
     const configFileRaw = fs.readFileSync(
-      path.join(__dirname, ".config"),
+      path.join(__dirname, ".teams-notifier-config.json"),
       "utf8"
     );
 
