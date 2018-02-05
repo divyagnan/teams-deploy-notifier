@@ -9,7 +9,7 @@ npm install -g teams-deploy-notifier
 
 ## Usage
 
-1. Create a `.teams-notifier.config.json` file in the root directory of your project. It should look similar to this:
+1. Create a `.teams-notifier-config.json` file in the root directory of your project. It should look similar to this:
 
 ```json
 {
