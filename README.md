@@ -1,4 +1,5 @@
 # teams-deploy-notifier [![npm version](https://badge.fury.io/js/teams-deploy-notifier.svg)](https://badge.fury.io/js/teams-deploy-notifier)
+
 > CLI tool to notify your colleagues on MS Teams that you've deployed something
 
 ## Installation
@@ -21,11 +22,13 @@ npm install -g teams-deploy-notifier
 }
 ```
 
-2. When you are ready to deploy call the cli and pass in the service and path options:
+2. When you are ready to deploy call the cli and optionally pass in the service, path, and git-commit options:
 
-`--service`: the name of the service that you want to deploy with. Examples include [now](https://zeit.co/now) and [netlify](https://www.netlify.com)
+`--service`: the name of the service that you want to deploy with. Examples include [now](https://zeit.co/now) and [netlify](https://www.netlify.com). This defaults to [now](https://zeit.co/now).
 
-`--path`: the path to the directory that you want to deploy. For example if you want to deploy the build directory you might pass in `build` if you wanted to deploy the current directory you might pass in `.`
+`--path`: the path to the directory that you want to deploy. For example if you want to deploy the build directory you might pass in `build` if you wanted to deploy the current directory you might pass in `.`. This defaults to `.`.
+
+`--git-commit`: how many git commit summaries you want to include in the notification. For example if you wanted only the latest commit you would pass in `1`. If you do not want to include any commits in the notification then omit this argument (by default no commits are included in teh notification).
 
 ```bash
 teams-deploy-notifier --service now --path build
@@ -41,26 +44,28 @@ teams-deploy-notifier --service now --path build
   // Available Arguments
   "--path": String, // DEFAULT: now
   "--service": String, // DEFAULT: .
+  "--git-commit": Number, // commits omitted from notification if number not specified
 
   // Aliases
   "-p": "--path",
-  "-s": "--service"
+  "-s": "--service",
+  "-gc": "--git-commit"
 ```
 
 Example with `now`:
 
 ```bash
-teams-deploy-notifier --service now --path build
+teams-deploy-notifier --service now --path build --git-commits 5
 # same as
-teams-deploy-notifier -s now -p build
+teams-deploy-notifier -s now -p build -gc 5
 ```
 
 Example with `netlify`:
 
 ```bash
-teams-deploy-notifier --service netlify --path build
+teams-deploy-notifier --service netlify --path build --git-commits 5
 # same as
-teams-deploy-notifier -s netlify -p build
+teams-deploy-notifier -s netlify -p build -gc 5
 ```
 
 If you do not pass in any arguments:
@@ -69,6 +74,7 @@ If you do not pass in any arguments:
 teams-deploy-notifier
 # same as
 teams-deploy-notifier --service now --path .
+# notice that no commits will be included in the notification if you don't specify a number
 ```
 
 #### Config File (`.teams-notifier-config.json`)

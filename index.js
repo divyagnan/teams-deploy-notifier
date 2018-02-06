@@ -6,23 +6,27 @@ const chalk = require("chalk");
 const urlRegex = require("url-regex");
 const format = require("date-fns/format");
 const hnt = require("hnt");
+const { toWordsOrdinal } = require("number-to-words");
 const fs = require("fs");
 const path = require("path");
 
 // define args
 const args = arg({
   // Types
-  "--path": String,
-  "--service": String,
+  "--path": String, // the path to the directory that you want to deploy
+  "--service": String, // the service that you want to deploy with
+  "--git-commits": Number, // the number of git commits to include in the update
 
   // Aliases
   "-p": "--path",
-  "-s": "--service"
+  "-s": "--service",
+  "-gc": "--git-commits"
 });
 
 // assign to an easier variable and provide defaults
 const service = args["--service"] || "now";
 const deployPath = args["--path"] || ".";
+const numGitCommits = args["--git-commits"];
 
 /**
  * Get the config file and extract the useful variables from it (projectName & teamsUrl)
@@ -70,11 +74,19 @@ function getConfig() {
  * Execute the service deploy and post the notification to teams
  * @param {string} service - the command for the service that you want to use
  * @param {string} deployPath - the path to the files you want to deploy
+ * @param {number} numGitCommits - the number of git commits to include in the summary
  * @param {string} projectName - the name of the project you are deploying
  * @param {string} teamsUrl - the teams webhook url where the notification needs to be posted
  * @param {{ themeColor: string? }} options - object with options provided by the user
  */
-function execAndPost(service, deployPath, projectName, teamsUrl, options) {
+function execAndPost(
+  service,
+  deployPath,
+  numGitCommits,
+  projectName,
+  teamsUrl,
+  options
+) {
   // make sure they have the service installed
   if (shell.which(service)) {
     // execute the command with the service with the provided path
@@ -83,9 +95,29 @@ function execAndPost(service, deployPath, projectName, teamsUrl, options) {
       `${service} ${service === "netlify" ? "deploy" : ""} ${deployPath}`
     );
 
+    // get the specified number of git commits
+    const { stdout: rawGitCommits } = shell.exec(
+      `git log -n ${numGitCommits} --format="%s"`,
+      { silent: true }
+    );
+
+    // split the commits by new line (so each commit is its own array entry)
+    // filter out undefined or empty items
+    const splitGitCommits = rawGitCommits.split("\n").filter(Boolean);
+
+    // generate the commit messages for the action card
+    const gitCommitActionCardItems = splitGitCommits.map((commit, i) => {
+      const word = toWordsOrdinal(i + 1);
+      const capitalizedWord = word.charAt(0).toUpperCase() + word.slice(1);
+      return {
+        name: i === 0 ? "Latest commit:" : `${capitalizedWord} latest commit:`,
+        value: commit
+      };
+    });
+
     // get the url from the stdout
     const urlMatches = stdout.match(urlRegex());
-    const deployedUrl = urlMatches[0];
+    const deployedUrl = urlMatches && urlMatches[0];
 
     // get date string of the time at which it was uploaded
     const dateString = format(new Date(), "MMM Do h:mma");
@@ -106,7 +138,8 @@ function execAndPost(service, deployPath, projectName, teamsUrl, options) {
               {
                 name: "Link:",
                 value: `[${deployedUrl}](${deployedUrl})`
-              }
+              },
+              ...gitCommitActionCardItems
             ]
           },
           {
@@ -141,4 +174,4 @@ function execAndPost(service, deployPath, projectName, teamsUrl, options) {
 
 // kick it off!
 const { projectName, teamsUrl, options } = getConfig();
-execAndPost(service, deployPath, projectName, teamsUrl, options);
+execAndPost(service, deployPath, numGitCommits, projectName, teamsUrl, options);
