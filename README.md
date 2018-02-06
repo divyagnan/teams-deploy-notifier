@@ -58,7 +58,7 @@ teams-deploy-notifier --service now --path build
 Example with `now`:
 
 ```bash
-teams-deploy-notifier --service now --path build --git-commits 5
+teams-deploy-notifier --service now --path build --git-commit 5
 # same as
 teams-deploy-notifier -s now -p build -gc 5
 ```
@@ -66,7 +66,7 @@ teams-deploy-notifier -s now -p build -gc 5
 Example with `netlify`:
 
 ```bash
-teams-deploy-notifier --service netlify --path build --git-commits 5
+teams-deploy-notifier --service netlify --path build --git-commit 5
 # same as
 teams-deploy-notifier -s netlify -p build -gc 5
 ```
