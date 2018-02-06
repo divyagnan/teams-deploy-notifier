@@ -28,7 +28,7 @@ npm install -g teams-deploy-notifier
 
 `--path`: the path to the directory that you want to deploy. For example if you want to deploy the build directory you might pass in `build` if you wanted to deploy the current directory you might pass in `.`. This defaults to `.`.
 
-`--git-commit`: how many git commit summaries you want to include in the notification. For example if you wanted only the latest commit you would pass in `1`. If you do not want to include any commits in the notification then omit this argument (by default no commits are included in teh notification).
+`--git-commit`: how many git commit summaries you want to include in the notification. This includes the last n commits in the notification where n is the number you pass in. For example if you wanted only the latest commit you would pass in `1`. If you wanted the last 5 commits you would pass in `5`. If you do not want to include any commits in the notification then omit this argument (by default no commits are included in teh notification).
 
 ```bash
 teams-deploy-notifier --service now --path build
@@ -40,11 +40,14 @@ teams-deploy-notifier --service now --path build
 
 #### CLI `teams-deploy-notifier`
 
-```
+```json
   // Available Arguments
-  "--path": String, // DEFAULT: now
-  "--service": String, // DEFAULT: .
-  "--git-commit": Number, // commits omitted from notification if number not specified
+  // the path to the directory that you want to deploy. defaults to now
+  "--path": String,
+  // the service that you want to deploy with. defaults to the current directory (.)
+  "--service": String,
+  // the last n git commits to include in the notification. commits omitted from notification if number not specified
+  "--git-commit": Number,
 
   // Aliases
   "-p": "--path",
